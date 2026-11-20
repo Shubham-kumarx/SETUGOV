@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Activity, ArrowRight, Bell, Building2, CheckCircle2, ChevronRight, ClipboardList, Clock3, FileCheck2, Home, Landmark, LayoutDashboard, LogOut, Menu, Network, Plus, Search, ShieldCheck, UserRound, Users, XCircle } from 'lucide-react';
 import { api, login, register } from './api';
