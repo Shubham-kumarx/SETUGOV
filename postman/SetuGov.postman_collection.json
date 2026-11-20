@@ -1,0 +1,25 @@
+{
+  "info": { "name": "SetuGov API", "_postman_id": "9f3bb7c0-4c3b-4c42-9d8b-setugov", "description": "Major REST endpoints for the SetuGov demonstration platform.", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:5000/api" }, { "key": "token", "value": "" }, { "key": "applicationRef", "value": "" }],
+  "item": [
+    { "name": "Health", "request": { "method": "GET", "url": "{{baseUrl}}/health" } },
+    { "name": "Authentication", "item": [
+      { "name": "Citizen login", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"citizen@setugov.demo\",\n  \"password\": \"Demo@123\"\n}" }, "url": "{{baseUrl}}/auth/login" } },
+      { "name": "Register citizen", "request": { "method": "POST", "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Citizen\",\n  \"email\": \"new@example.com\",\n  \"password\": \"Demo@123\"\n}" }, "url": "{{baseUrl}}/auth/register" } }
+    ] },
+    { "name": "Services", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/services" } },
+    { "name": "Consent", "item": [
+      { "name": "List my consent", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/consents" } },
+      { "name": "Grant welfare consent", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"dataScope\": [\"name\", \"address\", \"incomeBand\"]\n}" }, "url": "{{baseUrl}}/consents/SOCIAL_WELFARE" } },
+      { "name": "Revoke welfare consent", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/consents/SOCIAL_WELFARE" } }
+    ] },
+    { "name": "Applications", "item": [
+      { "name": "List applications", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/applications" } },
+      { "name": "Submit welfare application", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"serviceId\": \"paste-service-id-from-GET-services\",\n  \"payload\": {\n    \"scheme\": \"Asha Family Support\",\n    \"registryId\": \"CIT-1001\"\n  }\n}" }, "url": "{{baseUrl}}/applications" } },
+      { "name": "Officer updates status", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"Approved\",\n  \"notes\": \"Eligibility verified.\"\n}" }, "url": "{{baseUrl}}/applications/{{applicationRef}}/status" } }
+    ] },
+    { "name": "Admin dashboard", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/dashboard/admin" } },
+    { "name": "Departments", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/departments" } },
+    { "name": "Interoperability call", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"departmentCode\": \"CITIZEN_REGISTRY\",\n  \"operation\": \"getCitizen\",\n  \"payload\": { \"registryId\": \"CIT-1001\" }\n}" }, "url": "{{baseUrl}}/interoperability/call" } }
+  ]
+}

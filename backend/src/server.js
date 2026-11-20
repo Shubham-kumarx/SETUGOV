@@ -1,0 +1,35 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import 'express-async-errors';
+import { connectDatabase } from './config/db.js';
+import { bootstrapMemory } from './data/bootstrap.js';
+import authRoutes from './routes/auth.js';
+import serviceRoutes from './routes/services.js';
+import applicationRoutes from './routes/applications.js';
+import consentRoutes from './routes/consent.js';
+import departmentRoutes from './routes/departments.js';
+import interoperabilityRoutes from './routes/interoperability.js';
+import dashboardRoutes from './routes/dashboard.js';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
+
+const app = express();
+const port = process.env.PORT || 5000;
+app.use(cors({ origin: process.env.CLIENT_URL || '*', credentials: true }));
+app.use(express.json());
+app.use(morgan('dev'));
+app.get('/api/health', (req, res) => res.json({ ok: true, name: 'SetuGov API', mode: process.env.MONGO_URI ? 'mongodb-or-memory-demo' : 'memory-demo' }));
+app.use('/api/auth', authRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/consents', consentRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/interoperability', interoperabilityRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use(notFound);
+app.use(errorHandler);
+
+const mongoConnected = await connectDatabase();
+if (!mongoConnected) await bootstrapMemory();
+app.listen(port, () => console.log(`SetuGov API listening on http://localhost:${port}`));
